@@ -1,0 +1,50 @@
+import tester.*; // The tester library
+import javalib.worldimages.*; // images, like RectangleImage or OverlayImages
+import javalib.funworld.*; // the abstract World class and the big-bang library
+import java.awt.Color; // general colors (as triples of red,green,blue values)
+
+public abstract class AFish implements IFish {
+  Posn currentPosition;
+  Velocity currentVelocity;
+  int size;
+  String fishSprite;
+  int scaleFactor = 5;
+
+  AFish(Posn currentPosition, Velocity currentVelocity, int size) {
+    this.currentPosition = currentPosition;
+    this.currentVelocity = currentVelocity;
+    this.size = size;
+  }
+
+  public int combineWeight(int size) {
+    return this.size + size;
+  }
+
+  public boolean outsideBounds(double right, double left, double top, double bottom) {
+    return (this.currentPosition.x > right || this.currentPosition.x < left) ||
+        (this.currentPosition.y < top || this.currentPosition.y > bottom);
+  }
+
+  public boolean isBigger(int size) {
+    return this.size > size;
+  }
+
+  // determines if this fish can eat that
+  public boolean canEat(IFish that) {
+    double radius = this.size * this.scaleFactor;
+    double xRight = (double) this.currentPosition.x + radius;
+    double xLeft = (double) this.currentPosition.x - radius;
+    double yTop = (double) this.currentPosition.y - radius;
+    double yBottom = (double) this.currentPosition.y + radius;
+    return !that.isBigger(this.size) && !that.outsideBounds(xRight, xLeft, yTop, yBottom);
+
+  }
+
+  public boolean isSamePlayerFish(PlayerFish that) {
+    return false;
+  }
+
+  public boolean isSameBGFish(BackgroundFish that) {
+    return false;
+  }
+}

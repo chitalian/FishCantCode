@@ -1,0 +1,109 @@
+import java.awt.Color;
+
+import javalib.funworld.WorldScene;
+import javalib.worldimages.*;
+
+// Represents a the fish that is the player
+public class PlayerFish extends AFish {
+
+  int fishEatenCount;
+
+  PlayerFish(Posn currentPosition, Velocity currentVelocity,
+      int size, int fishEatenCount) {
+    super(currentPosition, currentVelocity, size);
+    this.fishEatenCount = fishEatenCount;
+  }
+
+  /*
+   * Template
+   * -----------
+   * fields:
+   * ... this.currentPosition ... Posn
+   * ... this.currentVelocity ... Velocity
+   * ... this.size ... int
+   * ... this.fishEatenCount ... int
+   * 
+   * Methods of fields:
+   * ... this.currentVelocity.updateVelocity(String keyEvent) ... Velocity
+   * ... this.currentVelocity.updateVelocityDrag() ... Velocity
+   * ... this.currentVelocity.updatePosn(Posn) ... Posn
+   * 
+   * Methods:
+   * ... this.updateVelocity(String keyEvent) ... IFish
+   * ... this.addDrag() ... IFish
+   * ... this.updatePosnOnTick() ... IFish
+   * ... this.drawFish(WorldScene) ... WorldScene
+   * ... this.isBigger(int size) ... boolean
+   * ... this.eatFish(IFish that) ... IFish
+   * ... this.isSame(IFish that) ... boolean
+   * ... this.isSamePlayerFish(PlayerFish that) ... boolean
+   * ... this.boolean isSameBGFish(BackgroundFish that) ... boolean
+   * ... this.combinedWeight(int size) ... int
+   * ... this.outsideBounds(double right, double left, double top, double bottom)
+   * ... boolean
+   * ... this.smallerThan(IFish thatFish) ... boolean
+   * ... this.canEat(IFish that) ... boolean
+   * 
+   */
+
+  public IFish updateVelocity(String keyEvent) {
+    return new PlayerFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocity(keyEvent),
+        this.size,
+        this.fishEatenCount);
+  }
+
+  // reduces velocity of IFish based on a drag constant
+  public IFish addDrag() {
+    return new PlayerFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocityDrag(),
+        this.size,
+        this.fishEatenCount);
+  }
+
+  // updates the position for each tick
+  public IFish updatePosnOnTick() {
+    return new PlayerFish(
+        this.currentVelocity.updatePosn(this.currentPosition),
+        this.currentVelocity,
+        this.size,
+        this.fishEatenCount);
+  }
+
+  public WorldScene drawFish(WorldScene currentScene) {
+    this.fishSprite = "src/player.png";
+    // FOR ADDING TURTLE REPLACE CIRCLE IMAGE WITH THIS ->
+    // new ScaleImageXY(
+    // new FromFileImage(this.fishSprite), .1, .1),
+    return currentScene.placeImageXY(
+        new CircleImage(this.size * this.scaleFactor, OutlineMode.SOLID, Color.GREEN),
+        this.currentPosition.x,
+        this.currentPosition.y);
+  }
+
+  public boolean isBigger(int size) {
+    return this.size >= size;
+  }
+
+  public IFish eatFish(IFish that) {
+    return new PlayerFish(
+        this.currentPosition,
+        this.currentVelocity,
+        that.combineWeight(this.size),
+        this.fishEatenCount + 1);
+  }
+
+  public boolean isSame(IFish that) {
+    return that.isSamePlayerFish(this);
+  }
+
+  public boolean isSamePlayerFish(PlayerFish that) {
+    return (this.currentPosition.equals(that.currentPosition.y))
+        && (this.currentVelocity.equals(that.currentVelocity))
+        && (this.size == that.size)
+        && (this.fishSprite.equals(this.fishSprite));
+  }
+
+}

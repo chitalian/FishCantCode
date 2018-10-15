@@ -1,0 +1,26 @@
+import tester.*; // The tester library
+import javalib.worldimages.*; // images, like RectangleImage or OverlayImages
+import javalib.funworld.*; // the abstract World class and the big-bang library
+import java.awt.Color; // general colors (as triples of red,green,blue values)
+
+public abstract class AFish implements IFish {
+  Posn currentPosition;
+  Velocity currentVelocity;
+  int size;
+  String fishSprite;
+
+  AFish(Posn currentPosition, Velocity currentVelocity, int size) {
+    this.currentPosition = currentPosition;
+    this.currentVelocity = currentVelocity;
+    this.size = size;
+  }
+
+  public WorldScene drawFish(WorldScene currentScene) {
+    int scaleFactor = 10;
+    return currentScene.placeImageXY(
+            new CircleImage(this.size * scaleFactor, OutlineMode.SOLID, Color.GREEN),
+        this.currentPosition.x, 
+        this.currentPosition.y);
+  }
+
+}

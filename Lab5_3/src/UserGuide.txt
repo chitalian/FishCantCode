@@ -1,0 +1,25 @@
+README FOR FISHY GAME.
+
+Steps to run:
+
+1) Create a new java project and import all the files in the "FishyGame.zip".
+
+2) Import the java libraries and the Tester libraries.
+
+3) Under run configurations get the current project to the new project you just created.
+
+4) Under "Arguments" add the following class -> "ExamplesFishy"
+
+5) Run!
+
+Steps to play:
+
+1) You play as the Green fishy.
+
+2) Use the arrow keys to move your character.
+
+3) You may eat other fishes (the red enemy fish) that are the same size or small.
+
+4) Once you are the largest fish out of all the current fish on the screen, you win!
+
+5) *NOTE: There must be another enemy fish on the screen in order to win.

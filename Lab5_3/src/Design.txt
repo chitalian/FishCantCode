@@ -1,0 +1,74 @@
+
+UML DIAGRAM
+
+               +-----------+
+               |           |
+      +------> |  ILoFish  | <-----+
+      |        |           |       |
+      |        +-----+-----+       |
+      |              ^             |
++-----+-----+        |       +-----+--------+
+|           |        |       |              |
+|  MtLoFish |        |       | ConsLoFish   |
+|           |        |       |              |           +--------+
++-----------+        |       | IFish first  +---------> |        |
+                     +-------+ ILoFish rest |           | IFish  |
+                             |              |           |        |
+                             +--------------+           +----+---+
+                                                             ^
+                                                        +----+---------------------+
+                                                        |                          |
+                                                        | AFish                    |
+                                                        |                          |
+                              +----------+              +--------------------------+
+                              |          |              |                          |
+                              | Velocity |              | Posn currentPosition     |
+                              |          | <------------+ Velocity currentVelocity |
+                              +----------+              | int size                 |
+                              |          |              | String fishSprite        |
+                              | int x    |              |                          |
+                              | int y    |              +-------------+------------+
+                              |          |                            ^
+                              +----------+                            |
+                                                                      |
+                                     +--------------------------------+--------------------+
+                                     |                                                     |
+                                     |                                                     |
+                              +------+-------------+                            +----------+-----+
+                              |                    |                            |                |
+                              | PlayerFish         |                            | BackgroundFish |
+                              |                    |                            |                |
+                              +--------------------+                            +----------------+
+                              |                    |
+                              | int fishEatenCount |
+                              |                    |
+                              +--------------------+
+
+
+
+
+
+
+
+
+
+Classes
+-------------------------------------------
+  FishyGame: (Extends World) Main class for the World that implements the main game functions
+    - Implements the necessary world functions for big bang. calls functions implemented in the classes illustrated above
+
+  ILoFish: (interface) List of IFish
+    - Main use is to generate random enemy fish as well as contain all the BackgroundFish
+
+  ConsLoFish: (implements ILoFish) node of a linked list containing the fishes.
+
+  MtLoFish: (implements ILoFish) empty list of IFish
+    - most important function is the generate random fish function. this is used when we want to append a new random fish to the end of background fish
+
+  IFish: (interface) used to manage basic functions of a fish.
+
+  AFish: (Abstract class) a generic class that contains functions used by PlayerFish and BackgroundFish
+
+  BackgroundFish: (Extends AFish) Used to represent the enemy fish.
+
+  Velocity: Contains an x and y velocity that is helpful for updating the position of the fish as the game continues

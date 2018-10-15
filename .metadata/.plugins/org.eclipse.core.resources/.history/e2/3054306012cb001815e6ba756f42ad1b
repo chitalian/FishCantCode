@@ -1,0 +1,7 @@
+
+
+// A List of fish
+public interface ILoFish {
+  //generates a random Background fish
+  ConsLoFish generateRandomBGFish();
+}

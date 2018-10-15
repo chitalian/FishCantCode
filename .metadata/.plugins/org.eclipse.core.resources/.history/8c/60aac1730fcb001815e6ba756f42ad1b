@@ -1,0 +1,31 @@
+import javalib.worldimages.Posn;
+
+public class BackgroundFish extends AFish {
+
+  BackgroundFish(Posn currentPosition, Velocity currentVelocity, int size) {
+    super(currentPosition, currentVelocity, size);
+  }
+
+  public IFish updateVelocity(String keyEvent) {
+    return new BackgroundFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocity(keyEvent),
+        this.size);
+  }
+  // reduces velocity of IFish based on a drag constant
+  public IFish addDrag() {
+    return new BackgroundFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocityDrag(),
+        this.size); 
+  }
+
+  // updates the position for each tick
+  public IFish updatePosnOnTick() {
+    return new BackgroundFish(
+        this.currentVelocity.updatePosn(this.currentPosition),
+        this.currentVelocity,
+        this.size);
+  }
+  
+}

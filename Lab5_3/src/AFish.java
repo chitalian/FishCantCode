@@ -1,0 +1,80 @@
+import javalib.worldimages.*; // images, like RectangleImage or OverlayImages
+
+public abstract class AFish implements IFish {
+  Posn currentPosition;
+  Velocity currentVelocity;
+  int size;
+  String fishSprite;
+  int scaleFactor = 5;
+
+  AFish(Posn currentPosition, Velocity currentVelocity, int size) {
+    this.currentPosition = currentPosition;
+    this.currentVelocity = currentVelocity;
+    this.size = size;
+  }
+  /*
+   * Template
+   * -----------
+   * fields:
+   * ... this.currentPosition ... Posn
+   * ... this.currentVelocity ... Velocity
+   * ... this.size ... int
+   * ... this.fishEatenCount ... int
+   * 
+   * Methods of fields:
+   * ... this.currentVelocity.updateVelocity(String keyEvent) ... Velocity
+   * ... this.currentVelocity.updateVelocityDrag() ... Velocity
+   * ... this.currentVelocity.updatePosn(Posn) ... Posn
+   * 
+   * Methods:
+   * ... this.updateVelocity(String keyEvent) ... IFish
+   * ... this.addDrag() ... IFish
+   * ... this.updatePosnOnTick() ... IFish
+   * ... this.drawFish(WorldScene) ... WorldScene
+   * ... this.isBigger(int size) ... boolean
+   * ... this.eatFish(IFish that) ... IFish
+   * ... this.isSame(IFish that) ... boolean
+   * ... this.isSamePlayerFish(PlayerFish that) ... boolean
+   * ... this.boolean isSameBGFish(BackgroundFish that) ... boolean
+   * ... this.combinedWeight(int size) ... int
+   * ... this.outsideBounds(double right, double left, double top, double bottom)
+   * ... boolean
+   * ... this.smallerThan(IFish thatFish) ... boolean
+   * ... this.canEat(IFish that) ... boolean
+   * 
+   * 
+   * 
+   */
+
+  public int combineWeight(int size) {
+    return this.size + size;
+  }
+
+  public boolean outsideBounds(double right, double left, double top, double bottom) {
+    return (this.currentPosition.x > right || this.currentPosition.x < left) ||
+        (this.currentPosition.y < top || this.currentPosition.y > bottom);
+  }
+
+  public boolean smallerThan(IFish thatFish) {
+    return thatFish.isBigger(this.size + 1);
+  }
+
+  // determines if this fish can eat that
+  public boolean canEat(IFish that) {
+    double radius = this.size * this.scaleFactor;
+    double xRight = (double) this.currentPosition.x + radius;
+    double xLeft = (double) this.currentPosition.x - radius;
+    double yTop = (double) this.currentPosition.y - radius;
+    double yBottom = (double) this.currentPosition.y + radius;
+    return !that.isBigger(this.size) && !that.outsideBounds(xRight, xLeft, yTop, yBottom);
+
+  }
+
+  public boolean isSamePlayerFish(PlayerFish that) {
+    return false;
+  }
+
+  public boolean isSameBGFish(BackgroundFish that) {
+    return false;
+  }
+}

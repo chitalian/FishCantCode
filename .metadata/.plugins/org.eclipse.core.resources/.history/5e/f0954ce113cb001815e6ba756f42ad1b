@@ -1,0 +1,25 @@
+import javalib.funworld.WorldScene;
+import javalib.worldimages.Posn;
+
+// empty list of fish
+public class MtLoFish implements ILoFish {
+  MtLoFish() {
+    
+  }
+
+  @Override
+  public ILoFish generateRandomBGFish(Posn fishPosn) {
+    return this;
+  }
+
+  @Override
+  public WorldScene drawLoFish(WorldScene currentScene) {
+    return currentScene;
+  }
+
+  @Override
+  public ILoFish mapUpdatePosnOnTick() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+}

@@ -1,0 +1,61 @@
+
+interface IComparator<T> {
+  boolean compareBy(T x1, T x2);
+}
+
+abstract class ABST<T> {
+  IComparator<T> order;
+
+  ABST(IComparator<T> order) {
+    this.order = order;
+  }
+}
+
+class Node<T> extends ABST<T> {
+  T data;
+  ABST<T> left;
+  ABST<T> right;
+
+  Node(IComparator<T> order, T data, ABST<T> left, ABST<T> right) {
+    super(order);
+    this.data = data;
+    this.left = left;
+    this.right = right;
+  }
+}
+
+class Book {
+  String title;
+  String author;
+  int price;
+
+  Book(String title, String author, int price) {
+    this.title = title;
+    this.author = author;
+    this.price = price;
+  }
+
+}
+
+class BooksByTitle implements IComparator<Book> {
+
+  // does b1 title comes before b2 title?
+  public boolean compareBy(Book b1, Book b2) {
+    return (b1.title.compareToIgnoreCase(b2.title) >= 0);
+  }
+
+}
+
+class BooksByAuthor implements IComparator<Book> {
+  // does b1 Author comes before b2 Author?
+  public boolean compareBy(Book b1, Book b2) {
+    return (b1.title.compareToIgnoreCase(b2.title) >= 0);
+  }
+}
+
+class BooksByPrice implements IComparator<Book> {
+  // does b1 Author comes before b2 Author?
+  public boolean compareBy(Book b1, Book b2) {
+    return (b1.title.compareToIgnoreCase(b2.title) >= 0);
+  }
+}

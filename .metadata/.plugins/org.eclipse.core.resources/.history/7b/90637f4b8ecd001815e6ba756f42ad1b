@@ -1,0 +1,74 @@
+import java.util.Random;
+
+import javalib.funworld.WorldScene;
+import javalib.worldimages.Posn;
+
+// a non-empty list of fish
+public class ConsLoFish implements ILoFish {
+  IFish first;
+  ILoFish rest;
+
+  ConsLoFish(IFish first, ILoFish rest) {
+    this.first = first;
+    this.rest = rest;
+  }
+
+  public ILoFish generateRandomBGFish(Posn bottomRight, Random rand) {
+    return new ConsLoFish(this.first, this.rest.generateRandomBGFish(bottomRight, rand));
+  }
+
+  public WorldScene drawLoFish(WorldScene currentScene) {
+    return this.rest.drawLoFish(this.first.drawFish(currentScene));
+  }
+
+  public ILoFish mapUpdatePosnOnTick() {
+    return new ConsLoFish(first.updatePosnOnTick(), rest.mapUpdatePosnOnTick());
+  }
+
+
+  public boolean canBeEaten(IFish thatFish) {
+    return thatFish.canEat(this.first) || rest.canBeEaten(thatFish);
+  }
+
+  public IFish eatenFish(IFish thatFish) {
+    if(thatFish.canEat(this.first))
+    {
+      return this.first;
+    } else {
+      return this.rest.eatenFish(thatFish);
+    }
+  }
+
+  
+  public ILoFish remove(IFish that) {
+    if(that.isSame(this.first)) {
+      return this.rest;
+    } else {
+      return new ConsLoFish(this.first, this.rest.remove(that));
+    }
+  }
+
+  
+  public boolean canEat(IFish thatFish) {
+    return (this.first.canEat(thatFish) || rest.canEat(thatFish));
+  }
+
+  
+  public ILoFish eraseFishOutOfBounds(double right, double left, double top, double bottom) {
+    if(this.first.outsideBounds(right, left, top, bottom))
+    {
+      return this.rest.eraseFishOutOfBounds(right, left, top, bottom);
+    }else
+    {
+      return new ConsLoFish(this.first, this.rest.eraseFishOutOfBounds(right, left, top, bottom));
+    }
+  }
+
+  public boolean smallerThan(IFish thatFish) {
+    return this.first.smallerThan(thatFish) && this.rest.smallerThan(thatFish) ;
+  }
+
+  public int size() {
+    return 1 + this.rest.size();
+  }
+}

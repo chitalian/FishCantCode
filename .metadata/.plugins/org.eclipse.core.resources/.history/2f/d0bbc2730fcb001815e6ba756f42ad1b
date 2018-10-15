@@ -1,0 +1,13 @@
+import javalib.funworld.WorldScene;
+
+public interface IFish {
+  
+  IFish updateVelocity(String keyEvent);
+  
+  // reduces velocity of IFish based on a drag constant
+  IFish addDrag();
+  // updates the position for each tick
+  IFish updatePosnOnTick();
+  // Draws a fish onto the worldScene
+  WorldScene drawFish(WorldScene currentScene);
+}

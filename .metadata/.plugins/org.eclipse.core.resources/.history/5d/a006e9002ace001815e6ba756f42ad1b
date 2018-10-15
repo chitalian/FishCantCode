@@ -1,0 +1,23 @@
+
+interface ISelectIF {
+  // predicate that returns true if that ImageFile compiles with the pred
+  boolean selectIF(ImageFile that);
+}
+
+class filterSmallerThan4000 implements ISelectIF{
+  public boolean selectIF(ImageFile that) {
+    return that.size() < 4000;
+  }
+}
+
+class filterNamesShorterThan4 implements ISelectIF{
+  public boolean selectIF(ImageFile that) {
+    return that.name.length() < 4;
+  }
+}
+
+class countSmallerThan4000 implements ISelectIF{
+  public boolean selectIF(ImageFile that) {
+    if
+  }
+}

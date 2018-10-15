@@ -1,0 +1,65 @@
+import java.awt.Color;
+
+import javalib.funworld.WorldScene;
+import javalib.worldimages.CircleImage;
+import javalib.worldimages.OutlineMode;
+import javalib.worldimages.Posn;
+
+public class BackgroundFish extends AFish {
+
+  BackgroundFish(Posn currentPosition, Velocity currentVelocity, int size) {
+    super(currentPosition, currentVelocity, size);
+  }
+
+  public IFish updateVelocity(String keyEvent) {
+    return new BackgroundFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocity(keyEvent),
+        this.size);
+  }
+
+  // reduces velocity of IFish based on a drag constant
+  public IFish addDrag() {
+    return new BackgroundFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocityDrag(),
+        this.size);
+  }
+
+  // updates the position for each tick
+  public IFish updatePosnOnTick() {
+    return new BackgroundFish(
+        this.currentVelocity.updatePosn(this.currentPosition),
+        this.currentVelocity,
+        this.size);
+  }
+
+  public WorldScene drawFish(WorldScene currentScene) {
+    return currentScene.placeImageXY(
+        new CircleImage(this.size * this.scaleFactor, OutlineMode.SOLID, Color.RED),
+        this.currentPosition.x,
+        this.currentPosition.y);
+  }
+
+  public IFish eatFish(IFish that) {
+    return new BackgroundFish(
+        this.currentPosition,
+        this.currentVelocity,
+        that.combineWeight(this.size));
+  }
+
+  public boolean isSame(IFish that) {
+    return that.isSameBGFish(this);
+  }
+
+  public boolean isBigger(int size) {
+    return this.size > size;
+  }
+
+  public boolean isSameBGFish(BackgroundFish that) {
+    return (this.currentPosition.equals(currentPosition))
+        && (this.currentVelocity.equals(that.currentVelocity))
+        && (this.size == that.size);
+  }
+
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="WorkbenchPreferenceDialogSettings">
+		<item value="344" key="DIALOG_X_ORIGIN"/>
+		<item value="83" key="DIALOG_Y_ORIGIN"/>
+	</section>
+	<section name="org.eclipse.ui.internal.QuickAccess">
+		<item value="563" key="dialogHeight"/>
+		<item value="900" key="dialogWidth"/>
+		<list key="textEntries">
+			<item value="2"/>
+			<item value="3"/>
+			<item value="1"/>
+			<item value="1"/>
+			<item value="1"/>
+		</list>
+		<list key="orderedElements">
+			<item value="org.eclipse.ui.preferencePages.ColorsAndFonts"/>
+			<item value="org.eclipse.ui.window.preferences(preferencePageId=org.eclipse.jdt.ui.preferences.CodeFormatterPreferencePage)"/>
+			<item value="org.eclipse.wst.sse.ui.preferences.tasktags"/>
+			<item value="org.eclipse.ui.window.preferences(preferencePageId=org.eclipse.wst.sse.ui.preferences.editor)"/>
+			<item value="org.eclipse.jdt.ui.preferences.CodeFormatterPreferencePage"/>
+		</list>
+		<list key="orderedProviders">
+			<item value="org.eclipse.ui.preferences"/>
+			<item value="org.eclipse.ui.commands"/>
+			<item value="org.eclipse.ui.preferences"/>
+			<item value="org.eclipse.ui.commands"/>
+			<item value="org.eclipse.ui.preferences"/>
+		</list>
+		<list key="textArray">
+			<item value="colors"/>
+			<item value="theme"/>
+			<item value="formatter"/>
+			<item value="form"/>
+			<item value="format"/>
+			<item value="todo"/>
+			<item value="text editors"/>
+			<item value="control stat"/>
+		</list>
+	</section>
+	<section name="ImportExportAction">
+		<item value="org.eclipse.ui.wizards.import.FileSystem" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
+			<item value="org.eclipse.ui.Basic"/>
+		</list>
+	</section>
+	<section name="FileSystemImportWizard">
+		<item value="false" key="WizardFileSystemResourceImportPage1.STORE_CREATE_CONTAINER_STRUCTURE_ID"/>
+		<item value="false" key="WizardFileSystemResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID"/>
+		<list key="WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="/Users/JustinTorre/Documents/School/Northeastern/Semester 4/Fundies2/Lab6/Lab6"/>
+			<item value="/Users/JustinTorre/Documents/School/Northeastern/Semester 4/Fundies2/Lab5"/>
+			<item value="/Users/JustinTorre/Documents/School/Northeastern/Semester 4/Fundies2/Lab5/Banking"/>
+			<item value="/Users/JustinTorre/Downloads/Sofftware"/>
+		</list>
+	</section>
+</section>

@@ -1,0 +1,7 @@
+import javalib.funworld.WorldScene;
+
+public interface IFish {
+  IFish updateVelocity(String keyEvent);
+  // Draws a fish onto the worldScene
+  WorldScene drawFish(WorldScene currentScene);
+}

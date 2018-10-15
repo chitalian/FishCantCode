@@ -1,0 +1,48 @@
+import javalib.worldimages.Posn;
+
+public class Velocity {
+  int maxVelX = 1000;
+  int maxVelY = 300;
+  int xStep = 1;
+  int yStep = 30;
+
+  int x;
+  int y;
+
+  Velocity() {
+    this.x = 0;
+    this.y = 0;
+  }
+
+  Velocity(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  // Updates the velocity based on a Key Press.
+  // Note that the max velocity is
+  public Velocity updateVelocity(String keyEvent) {
+    if (keyEvent == "left" && Math.abs(this.x) < maxVelX) {
+      return new Velocity(this.x - xStep, this.y);
+    } else if (keyEvent == "d") {
+      return new Velocity(this.x + xStep, this.y);
+    } else if (keyEvent == "up" && Math.abs(this.y) < maxVelY) {
+      return new Velocity(this.x, this.y - yStep);
+    } else if (keyEvent == "down" && this.y < maxVelY) {
+      return new Velocity(this.x, this.y + yStep);
+    } else {
+      return this;
+    }
+  }
+
+  // updates the velocity based on the drag of the water
+  public Velocity updateVelocityDrag() {
+    return this;
+  }
+
+  // updates current Posn based on the velocity
+  public Posn updatePosn(Posn currentPosn) {
+    return new Posn(currentPosn.x + this.x, currentPosn.y + this.y);
+  }
+
+}

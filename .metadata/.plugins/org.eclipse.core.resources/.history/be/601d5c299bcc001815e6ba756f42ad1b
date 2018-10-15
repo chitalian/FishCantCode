@@ -1,0 +1,65 @@
+import javalib.funworld.WorldScene;
+import javalib.worldimages.Posn;
+
+// a non-empty list of fish
+public class ConsLoFish implements ILoFish {
+  IFish first;
+  ILoFish rest;
+
+  ConsLoFish(IFish first, ILoFish rest) {
+    this.first = first;
+    this.rest = rest;
+  }
+
+  public ILoFish generateRandomBGFish(Posn bottomRight) {
+    int randomSize = (int) (Math.random() * 9);
+    int randomTime = (int) (Math.random() * 1075);
+
+    if (randomTime % 25 == 0) {
+      boolean rightSide = (((int)(Math.random()* 3)) % 2 == 0);
+      int randomY = (int) (Math.random() * bottomRight.y);
+      if (rightSide) {
+        return new ConsLoFish(
+            new BackgroundFish(new Posn(bottomRight.x, randomY), new Velocity(-1, 0), randomSize),
+            this);
+      } else {
+        return new ConsLoFish(
+            new BackgroundFish(new Posn(0, randomY), new Velocity(1, 0), randomSize),
+            this);
+      }
+    } else {
+      return this;
+    }
+  }
+
+  public WorldScene drawLoFish(WorldScene currentScene) {
+    return this.rest.drawLoFish(this.first.drawFish(currentScene));
+  }
+
+  public ILoFish mapUpdatePosnOnTick() {
+    return new ConsLoFish(first.updatePosnOnTick(), rest.mapUpdatePosnOnTick());
+  }
+
+
+  public boolean canBeEaten(IFish thatFish) {
+    return thatFish.canEat(this.first) || rest.canBeEaten(thatFish);
+  }
+
+  public IFish eatenFish(IFish thatFish) {
+    if(thatFish.canEat(this.first))
+    {
+      return this.first;
+    } else {
+      return this.rest.eatenFish(thatFish);
+    }
+  }
+
+  
+  public ILoFish remove(IFish that) {
+    if(that.isSame(this.first)) {
+      return this.rest;
+    } else {
+      return new ConsLoFish(this.first, this.rest.remove(that));
+    }
+  }
+}

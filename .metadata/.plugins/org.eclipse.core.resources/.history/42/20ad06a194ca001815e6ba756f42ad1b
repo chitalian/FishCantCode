@@ -1,0 +1,65 @@
+import java.awt.Color;
+
+import javalib.funworld.WorldScene;
+import javalib.worldcanvas.WorldCanvas;
+import javalib.worldimages.Posn;
+import javalib.worldimages.TextImage;
+
+public class Velocity {
+  int maxVelX = 1000;
+  int maxVelY = 300;
+  int xStep = 1;
+  int yStep = 1;
+
+  int x;
+  int y;
+
+  Velocity() {
+    this.x = 0;
+    this.y = 0;
+  }
+
+  Velocity(int x, int y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  // Updates the velocity based on a Key Press.
+  // Note that the max velocity is
+  public Velocity updateVelocity(String keyEvent) {
+    
+//    int x = 960, y = 540;
+//    WorldCanvas c = new WorldCanvas(x, y);
+//    WorldScene s = new WorldScene(x, y);
+//      c.drawScene(
+//      s.placeImageXY(new TextImage(keyEvent, Color.red),
+//              250, 
+//              250));
+//      c.show();
+//
+//    return new Velocity(this.x +1, this.y);
+    
+    if (keyEvent.equals("left")) {
+      return new Velocity(this.x - 1, this.y);
+    } else if (keyEvent == "d") {
+      return new Velocity(this.x + 1, this.y);
+    } else if (keyEvent == "up") {
+      return new Velocity(this.x, this.y - yStep);
+    } else if (keyEvent == "down") {
+      return new Velocity(this.x, this.y + yStep);
+    } else {
+      return this;
+    }
+  }
+
+  // updates the velocity based on the drag of the water
+  public Velocity updateVelocityDrag() {
+    return this;
+  }
+
+  // updates current Posn based on the velocity
+  public Posn updatePosn(Posn currentPosn) {
+    return new Posn(currentPosn.x + this.x, currentPosn.y + this.y);
+  }
+
+}

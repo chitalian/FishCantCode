@@ -1,0 +1,315 @@
+import java.util.Random;
+import tester.*; // The tester library
+import javalib.worldimages.*; // images, like RectangleImage or OverlayImages
+import javalib.funworld.*; // the abstract World class and the big-bang library
+import javalib.worldcanvas.WorldCanvas;
+
+import java.awt.Color; // general colors (as triples of red,green,blue values)
+// and predefined colors (Red, Green, Yellow, Blue, Black, White)
+
+class FishyGame extends World {
+
+  int width = 960;
+  int height = 540;
+
+
+  String backGroundImg = "src/Sea-Water-Background.jpg";
+
+  Random rand;
+  // Represents all the Background fish currently on the canvas
+  ILoFish backgroundFish;
+
+  // represents the player
+  IFish player;
+  /** The constructor */
+  public FishyGame(IFish player, ILoFish backgroundFish) {
+    this(player, backgroundFish, new Random());
+  }
+
+  /** The constructor */
+  public FishyGame(IFish player, ILoFish backgroundFish, Random rand) {
+    super();
+    this.player = player;
+    this.backgroundFish = backgroundFish;
+    this.rand = rand;
+  }
+
+  /** Move player when the player presses a key */
+  public World onKeyEvent(String ke) {
+    if (ke.equals("x"))
+      return this.endOfWorld("Goodbye");
+    else
+      return new FishyGame(this.player.updateVelocity(ke), this.backgroundFish);
+  }
+
+  @Override
+  public WorldScene makeScene() {
+    return this.backgroundFish.drawLoFish(
+        this.player.drawFish(
+            new WorldScene(this.width, this.height).placeImageXY(
+                new ScaleImageXY(
+                    new FromFileImage(backGroundImg), .5, .5),
+                this.width / 2, this.height / 2)));
+  }
+
+  /**
+   * On tick move the Blob in a random direction.
+   */
+  public World onTick() {
+    // random int from 0 - 303
+    int randomTime = (rand.nextInt(101));
+    boolean shouldGenerateFish = (randomTime % 50 == 0);
+
+    if (this.backgroundFish.canBeEaten(this.player) && shouldGenerateFish) {
+      IFish eatenFish = this.backgroundFish.eatenFish(this.player);
+      return new FishyGame(this.player
+          .updatePosnOnTick()
+          .addDrag()
+          .eatFish(eatenFish),
+          this.backgroundFish
+              .eraseFishOutOfBounds(this.width + 1, -1, -1, this.height + 1)
+              .remove(eatenFish)
+              .mapUpdatePosnOnTick()
+              .generateRandomBGFish(new Posn(this.width, this.height), rand));
+    } else if (!this.backgroundFish.canBeEaten(this.player) && shouldGenerateFish) {
+      return new FishyGame(this.player
+          .updatePosnOnTick()
+          .addDrag(),
+          this.backgroundFish
+              .eraseFishOutOfBounds(this.width + 1, -1, -1, this.height + 1)
+              .mapUpdatePosnOnTick()
+              .generateRandomBGFish(new Posn(this.width, this.height), rand));
+    } else if (this.backgroundFish.canBeEaten(this.player) && !shouldGenerateFish) {
+      IFish eatenFish = this.backgroundFish.eatenFish(this.player);
+      return new FishyGame(this.player
+          .updatePosnOnTick()
+          .addDrag()
+          .eatFish(eatenFish),
+          this.backgroundFish
+              .eraseFishOutOfBounds(this.width + 1, -1, -1, this.height + 1)
+              .remove(eatenFish)
+              .mapUpdatePosnOnTick());
+    } else {
+      return new FishyGame(this.player.updatePosnOnTick().addDrag(),
+          this.backgroundFish
+              .eraseFishOutOfBounds(this.width + 1, -1, -1, this.height + 1)
+              .mapUpdatePosnOnTick());
+    }
+    // new BlobWorldFun(this.blob.randomMove(5));
+  }
+
+
+  /** The entire background image for this world */
+  public WorldImage blackHole = new OverlayImage(new CircleImage(10,
+      OutlineMode.SOLID, Color.BLACK),
+      new RectangleImage(this.width,
+          this.height, OutlineMode.SOLID, Color.BLUE));
+
+  /** produce the last image of this world by adding text to the image */
+  public WorldScene lastScene(String s) {
+    return this.makeScene().placeImageXY(new ScaleImage(new TextImage(s, Color.red), 7), this.width / 2,
+        this.height / 2);
+  }
+
+  /**
+   * Check whether the Blob is out of bounds, or fell into the black hole in
+   * the middle.
+   */
+  public WorldEnd worldEnds() {
+    // if the blob is outside the canvas, stop
+    if (this.backgroundFish.canEat(this.player)) {
+      return new WorldEnd(true,
+          this.lastScene("YOU WERE EATEN!"));
+    }
+    if (this.backgroundFish.smallerThan(this.player)
+        && this.backgroundFish.size() > 0) {
+      return new WorldEnd (true, this.lastScene("YOU WIN"));
+    } else {
+      return new WorldEnd(false, this.makeScene());
+    }
+  }
+
+  // support for the regression tests
+  public static examplesFishy examplesInstance = new examplesFishy();
+
+}
+
+class examplesFishy {
+  int width = 960;
+  int height = 540;
+
+  String backGroundImg = "src/Sea-Water-Background.jpg";
+
+  PlayerFish exPlayer1 = new PlayerFish(
+      new Posn(250, 250), new Velocity(0, 0), 1, 0);
+  PlayerFish exPlayer1Left = new PlayerFish(
+      new Posn(250, 250), new Velocity(-3, 0), 1, 0);
+  PlayerFish exPlayer1LeftPost = new PlayerFish(
+      new Posn(247, 250), new Velocity(-3, 0), 1, 0);
+
+  PlayerFish exPlayer1Right = new PlayerFish(
+      new Posn(250, 250), new Velocity(3, 0), 1, 0);
+  PlayerFish exPlayer1Up = new PlayerFish(
+      new Posn(250, 250), new Velocity(0, -3), 1, 0);
+  PlayerFish exPlayer1Down = new PlayerFish(
+      new Posn(250, 250), new Velocity(0, 3), 1, 0);
+
+  BackgroundFish exNPC1 = new BackgroundFish(new Posn(250, 0), new Velocity(0, 0), 1);
+  BackgroundFish exNPC2 = new BackgroundFish(new Posn(250, 500), new Velocity(1, 0), 3);
+  BackgroundFish exNPC3 = new BackgroundFish(new Posn(200, 0), new Velocity(0, 3), 8);
+  BackgroundFish exNPC4 = new BackgroundFish(new Posn(250, 250), new Velocity(0, 3), 8);
+  ConsLoFish exBackgroundFishList = new ConsLoFish(exNPC1,
+      new ConsLoFish(exNPC2,
+          new ConsLoFish(exNPC3, new MtLoFish())));
+  BackgroundFish exNPC1Post = new BackgroundFish(new Posn(250, 0), new Velocity(0, 0), 1);
+  BackgroundFish exNPC2Post = new BackgroundFish(new Posn(251, 500), new Velocity(1, 0), 3);
+  BackgroundFish exNPC3Post = new BackgroundFish(new Posn(200, 3), new Velocity(0, 3), 8);
+  BackgroundFish exNPC4Post = new BackgroundFish(new Posn(250, 253), new Velocity(0, 3), 8);
+  ConsLoFish exBackgroundFishListPost = new ConsLoFish(exNPC1Post,
+      new ConsLoFish(exNPC2Post,
+          new ConsLoFish(exNPC3Post, new MtLoFish())));
+
+  FishyGame exGame = new FishyGame(exPlayer1, exBackgroundFishList);
+  FishyGame exGameLeft = new FishyGame(exPlayer1Left, exBackgroundFishList);
+  FishyGame exGameLeftPost = new FishyGame(exPlayer1LeftPost, exBackgroundFishListPost);
+
+  FishyGame exGamePlayerLoss = new FishyGame(exPlayer1, new ConsLoFish(exNPC4, new MtLoFish()));
+
+  FishyGame exGameRight = new FishyGame(exPlayer1Right, exBackgroundFishList);
+  FishyGame exGameUp = new FishyGame(exPlayer1Up, exBackgroundFishList);
+  FishyGame exGameDown = new FishyGame(exPlayer1Down, exBackgroundFishList);
+
+  WorldScene emptyScene = new WorldScene(this.width, this.height).placeImageXY(
+      new ScaleImageXY(
+          new FromFileImage(backGroundImg), .5, .5),
+      this.width / 2, this.height / 2);
+
+  /** test the method onKeyEvent in the BlobWorldFun class */
+  boolean testOnKeyEvent(Tester t) {
+    return t.checkExpect(this.exGame.onKeyEvent("left"), this.exGameLeft,
+        "test movePlayer - left " + "\n")
+        && t.checkExpect(this.exGame.onKeyEvent("right"), this.exGameRight,
+            "test movePlayer - right " + "\n")
+        && t.checkExpect(this.exGame.onKeyEvent("up"), this.exGameUp,
+            "test movePlayer - up " + "\n")
+        && t.checkExpect(this.exGame.onKeyEvent("down"), this.exGameDown,
+            "test movePlayer - down " + "\n")
+    /*
+     * && t.checkExpect(this.exGame.onKeyEvent("x"),
+     * this.exGame.endOfWorld("Goodbye"),
+     * "test endGame - c " + "\n")
+     */;
+  }
+
+  boolean testMovePlayer(Tester t) {
+    return t.checkExpect(this.exPlayer1.updateVelocity("left"), this.exPlayer1Left,
+        "test movePlayer - left " + "\n")
+        && t.checkExpect(this.exPlayer1.updateVelocity("right"), this.exPlayer1Right,
+            "test movePlayer - right " + "\n")
+        && t.checkExpect(this.exPlayer1.updateVelocity("up"), this.exPlayer1Up,
+            "test movePlayer - up " + "\n")
+        && t.checkExpect(this.exPlayer1.updateVelocity("down"), this.exPlayer1Down,
+            "test movePlayer - down " + "\n");
+  }
+
+  boolean testChangePlayerPosn(Tester t) {
+    return t.checkExpect(this.exPlayer1Left.updatePosnOnTick(), this.exPlayer1LeftPost,
+        "test movePlayer - left " + "\n");
+  }
+
+  boolean testChangeBGPosn(Tester t) {
+    return t.checkExpect(this.exBackgroundFishList.mapUpdatePosnOnTick(),
+        new ConsLoFish(exNPC1.updatePosnOnTick(),
+            new ConsLoFish(exNPC2.updatePosnOnTick(),
+                new ConsLoFish(exNPC3.updatePosnOnTick(), new MtLoFish()))),
+        "test movePlayer - left " + "\n");
+  }
+
+  boolean testChangeBGPosn1(Tester t) {
+    return t.checkExpect(this.exBackgroundFishList.mapUpdatePosnOnTick(), this.exBackgroundFishListPost,
+        "test movePlayer - left " + "\n");
+  }
+
+  boolean testGenBGFish(Tester t) {
+    BackgroundFish randomFish = (BackgroundFish) ((ConsLoFish) (new MtLoFish())
+        .generateRandomBGFish(new Posn(this.width, this.height), new Random(12))).first;
+    return t.checkOneOf(randomFish.size, 1, 2, 3, 4, 5) &&
+        t.checkOneOf(randomFish.currentVelocity.x, 1.0, -1.0) &&
+        t.checkOneOf(randomFish.currentPosition.x, 0, this.width) &&
+        t.checkExpect(randomFish.currentPosition.y, 16);
+  }
+
+  boolean testOnTick(Tester t) {
+    return true;
+    return t.checkExpect(this.exGameLeft.onTick(), this.exGameLeftPost,
+        "test movePlayer - left " + "\n");
+  }
+
+  boolean testisSameTester(Tester t) {
+    return t.checkExpect(this.exPlayer1.isSame(exNPC1), false)
+        && t.checkExpect(this.exNPC1.isSame(exNPC1), true);
+  }
+
+  // testing the drawFish Method
+  boolean testPlaceFish(Tester t) {
+    return t.checkExpect(this.exPlayer1Right.outsideBounds((double) this.width, 0, 0, (double) this.height), false)
+        && t.checkExpect(new PlayerFish(
+            new Posn(250, 10000), new Velocity(100, 0), 1, 0).outsideBounds((double) this.width, 0, 0,
+                (double) this.height),
+            true);
+  }
+
+//  boolean testWorldEnds(Tester t) {
+//    FishyGame w = new FishyGame(new Blob(new Posn(150, 100), 20,
+//        Color.RED));
+//    w.bigBang(200, 300, 0.3);
+//    return t.checkExpect(
+//        this.bwOutOfBounds.worldEnds(),
+//        new WorldEnd(true, this.bwOutOfBounds.makeScene().placeImageXY(
+//            new TextImage("Blob is outside the bounds", Color.red),
+//            100, 40)))
+//        &&
+//
+//        t.checkExpect(
+//            this.bwInTheCenter.worldEnds(),
+//            new WorldEnd(true, this.bwInTheCenter.makeScene()
+//                .placeImageXY(
+//                    new TextImage(
+//                        "Black hole ate the blob", 13,
+//                        FontStyle.BOLD_ITALIC, Color.red),
+//                    100, 40)))
+//        &&
+//
+//        t.checkExpect(this.b1w.worldEnds(), new WorldEnd(false,
+//            this.b1w.makeScene()));
+//  }
+
+  // used to draw the actual image on a canvas
+  boolean testDrawFishyGame(Tester t) {
+    int x = 960, y = 540;
+    WorldCanvas c = new WorldCanvas(x, y);
+    WorldScene s = new WorldScene(x, y);
+
+    FishyGame w = new FishyGame(
+        new PlayerFish(
+            new Posn(250, 250), new Velocity(0, 0), 1, 0),
+        new MtLoFish());
+//      c.drawScene(
+//      s.placeImageXY(new ScaleImageXY(
+//          new FromFileImage("src/Sea-Water-Background.jpg"), .5, .5),
+//          x / 2, y / 2))
+//      .placeImageXY(
+//              new CircleImage(this.size, this.fishSprite, Color.GREEN), 
+//              this.currentPosition.x, 
+//              this.currentPosition.y);
+//      c.show();
+    // return null;
+    return w.bigBang(x, y, .03);
+//        c.drawScene(
+//        s.placeImageXY(new ScaleImageXY(
+//            new FromFileImage("src/Sea-Water-Background.jpg"), .5, .5),
+//            x / 2, y / 2))
+//        && c.show();
+  }
+
+}

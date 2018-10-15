@@ -1,0 +1,29 @@
+import javalib.funworld.WorldScene;
+import javalib.worldimages.Posn;
+
+// empty list of fish
+public class MtLoFish implements ILoFish {
+  MtLoFish() {
+    
+  }
+
+  public ILoFish generateRandomBGFish(Posn fishPosn) {
+    return this;
+  }
+
+  public WorldScene drawLoFish(WorldScene currentScene) {
+    return currentScene;
+  }
+
+  public ILoFish mapUpdatePosnOnTick() {
+    return this;
+  }
+
+  public boolean canBeEaten(IFish thatFish) {
+    return false;
+  }
+
+  public IFish eatenFish(IFish thatFish) {
+    return thatFish;
+  }
+}

@@ -1,0 +1,71 @@
+import java.awt.Color;
+
+import javalib.funworld.WorldScene;
+import javalib.worldimages.*;
+
+// Represents a the fish that is the player
+public class PlayerFish extends AFish{
+  
+  int fishEatenCount;
+  
+  
+  PlayerFish(Posn currentPosition, Velocity currentVelocity, 
+      int size, int fishEatenCount) {
+    super(currentPosition, currentVelocity, size);
+    this.fishEatenCount = fishEatenCount;
+  }
+  public IFish updateVelocity(String keyEvent) {
+    return new PlayerFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocity(keyEvent),
+        this.size,
+        this.fishEatenCount);
+  }
+  // reduces velocity of IFish based on a drag constant
+  public IFish addDrag() {
+    return new PlayerFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocityDrag(),
+        this.size,
+        this.fishEatenCount); 
+  }
+
+  // updates the position for each tick
+  public IFish updatePosnOnTick() {
+    return new PlayerFish(
+        this.currentVelocity.updatePosn(this.currentPosition),
+        this.currentVelocity,
+        this.size,
+        this.fishEatenCount);
+  }
+  
+  public WorldScene drawFish(WorldScene currentScene) {
+    return currentScene.placeImageXY(
+        new CircleImage(this.size * this.scaleFactor, OutlineMode.SOLID, Color.GREEN),
+        this.currentPosition.x,
+        this.currentPosition.y);
+  }
+  
+  public IFish eatFish(IFish that) {
+    return new PlayerFish(
+        this.currentPosition,
+        this.currentVelocity,
+        that.combineWeight(this.fishEatenCount),
+        this.fishEatenCount + 1);
+  }
+
+  public boolean isSame(IFish that) {
+    
+    return that.isSamePlayerFish(this);
+  }
+
+  public boolean isSamePlayerFish(PlayerFish that) {
+    return (this.currentPosition.equals(currentPosition.y))
+        && (this.currentVelocity.equals(that.currentVelocity))
+        && (this.size == that.size)
+        && (this.fishSprite.equals(this.fishSprite));
+  }
+
+  }
+  
+}

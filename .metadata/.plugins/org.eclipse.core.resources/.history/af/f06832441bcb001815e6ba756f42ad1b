@@ -1,0 +1,17 @@
+import javalib.funworld.WorldScene;
+import javalib.worldimages.Posn;
+
+// A List of fish
+public interface ILoFish {
+  // generates a random Background fish
+  ILoFish generateRandomBGFish(Posn bottomRight);
+
+  // generates a random Background fish
+  ILoFish mapUpdatePosnOnTick();
+
+  // draws all the first in the list of fish on top of one another
+  WorldScene drawLoFish(WorldScene currentScene);
+
+  // determines if that fish can eat anything in this list
+  boolean canBeEaten(IFish thatFish);
+}

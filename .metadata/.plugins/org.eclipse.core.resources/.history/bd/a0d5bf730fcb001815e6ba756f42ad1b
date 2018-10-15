@@ -1,0 +1,36 @@
+import javalib.worldimages.*;
+
+// Represents a the fish that is the player
+public class PlayerFish extends AFish{
+  int fishEatenCount;
+  PlayerFish(Posn currentPosition, Velocity currentVelocity, 
+      int size, int fishEatenCount) {
+    super(currentPosition, currentVelocity, size);
+    this.fishEatenCount = fishEatenCount;
+  }
+  public IFish updateVelocity(String keyEvent) {
+    return new PlayerFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocity(keyEvent),
+        this.size,
+        this.fishEatenCount);
+  }
+  // reduces velocity of IFish based on a drag constant
+  public IFish addDrag() {
+    return new PlayerFish(
+        this.currentPosition,
+        this.currentVelocity.updateVelocityDrag(),
+        this.size,
+        this.fishEatenCount); 
+  }
+
+  // updates the position for each tick
+  public IFish updatePosnOnTick() {
+    return new PlayerFish(
+        this.currentVelocity.updatePosn(this.currentPosition),
+        this.currentVelocity,
+        this.size,
+        this.fishEatenCount);
+  }
+  
+}

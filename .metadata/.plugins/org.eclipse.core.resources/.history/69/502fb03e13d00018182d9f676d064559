@@ -1,0 +1,31 @@
+
+interface IComparator <T> {
+  
+}
+
+
+abstract class ABST <T> {
+  IComparator <T> order;
+  
+  ABST(IComparator <T> order){
+    this.order = order;
+  }
+}
+
+class Node <T> extends ABST<T>{
+  T data;
+  ABST<T> left;
+  ABST<T> right;
+  Node(IComparator <T> order, T data, ABST<T> left, ABST<T> right){
+    super(order);
+    this.data = data;
+    this.left = left;
+    this.right = right;
+  }
+}
+
+class Book {
+  
+}
+
+

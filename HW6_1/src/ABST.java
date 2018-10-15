@@ -1,0 +1,196 @@
+import tester.*;
+
+interface IComparator<T> {
+  boolean compareBy(T x1, T x2);
+}
+
+abstract class ABST<T> {
+  IComparator<T> order;
+
+  ABST(IComparator<T> order) {
+    this.order = order;
+  }
+
+  /**
+   * Fields:
+   * this.order : IComparator<T>
+   * 
+   * Methods:
+   * this.insert(T item)
+   */
+  ABST<T> insert(T item) {
+    return this;
+  }
+}
+
+class Leaf<T> extends ABST<T> {
+  Leaf(IComparator<T> order) {
+    super(order);
+  }
+}
+
+class Node<T> extends ABST<T> {
+  T data;
+  ABST<T> left;
+  ABST<T> right;
+
+  Node(IComparator<T> order, T data, ABST<T> left, ABST<T> right) {
+    super(order);
+    this.data = data;
+    this.left = left;
+    this.right = right;
+  }
+
+  /**
+   * Fields:
+   * this.order : IComparator<T>
+   * this.data : ABST<T>
+   * this.left : ABST<T>
+   * this.right : ABST<T>
+   * 
+   * Methods:
+   * this.insert(T item)
+   *
+   */
+//  ABST<T> insert(T item) {
+//    if (this.order.compareBy(data, item)) {
+//      return 
+//    } else {
+//
+//    }
+//  }
+
+}
+
+class Book {
+  String title;
+  String author;
+  int price;
+
+  Book(String title, String author, int price) {
+    this.title = title;
+    this.author = author;
+    this.price = price;
+  }
+
+}
+
+class BooksByTitle implements IComparator<Book> {
+  // does b1 title comes before b2 title?
+  public boolean compareBy(Book b1, Book b2) {
+    return (b1.title.compareToIgnoreCase(b2.title) >= 0);
+  }
+
+}
+
+class BooksByAuthor implements IComparator<Book> {
+  // does b1 Author comes before b2 Author?
+  public boolean compareBy(Book b1, Book b2) {
+    return (b1.author.compareToIgnoreCase(b2.author) >= 0);
+  }
+}
+
+class BooksByPrice implements IComparator<Book> {
+  // does b1 Price is higher than b2 price?
+  public boolean compareBy(Book b1, Book b2) {
+    return (b1.price > b2.price);
+  }
+}
+
+class ExampleABST {
+  Book book1 = new Book("Don Quixote", "Miguel de Cervantes", 999);
+  Book book2 = new Book("The Great Gatsby", "F. Scott Fitzgerald", 15);
+  Book book3 = new Book("Moby Dick", "Herman Melville", 17);
+  Book book4 = new Book("The Odyssey", "Homer", 23);
+  Book book5 = new Book("The Iliad", "Homer", 11);
+  Book book6 = new Book("Catcher in the Rye", "JD Salinger", 16);
+  Node<Book> binaryBookTree1 = new Node<Book>(
+      new BooksByTitle(),
+      book1,
+      new Leaf<Book>(new BooksByTitle()),
+      new Leaf<Book>(new BooksByTitle()));
+
+  // BOOKS BY TITLE
+  // Book1 -> Book3 -> Book2 -> Book5 -> Book4
+  Node<Book> binaryBookTree2 = new Node<Book>(
+      new BooksByTitle(),
+      book2,
+      new Node<Book>(
+          new BooksByTitle(),
+          book3,
+          new Node<Book>(
+              new BooksByTitle(),
+              book1,
+              new Leaf<Book>(new BooksByTitle()),
+              new Leaf<Book>(new BooksByTitle())),
+          new Leaf<Book>(new BooksByTitle())),
+      new Node<Book>(
+          new BooksByTitle(),
+          book5,
+          new Leaf<Book>(new BooksByTitle()),
+          new Node<Book>(
+              new BooksByTitle(),
+              book4,
+              new Leaf<Book>(new BooksByTitle()),
+              new Leaf<Book>(new BooksByTitle()))));
+
+  // Book6 -> Book1 -> Book3 -> Book2 -> Book5 -> Book4
+  Node<Book> binaryBookTree2_1 = new Node<Book>(
+      new BooksByTitle(),
+      book2,
+      new Node<Book>(
+          new BooksByTitle(),
+          book3,
+          new Node<Book>(
+              new BooksByTitle(),
+              book1,
+              new Node<Book>(
+                  new BooksByTitle(),
+                  book6,
+                  new Leaf<Book>(new BooksByTitle()),
+                  new Leaf<Book>(new BooksByTitle())),
+              new Leaf<Book>(new BooksByTitle())),
+          new Leaf<Book>(new BooksByTitle())),
+      new Node<Book>(
+          new BooksByTitle(),
+          book5,
+          new Leaf<Book>(new BooksByTitle()),
+          new Node<Book>(
+              new BooksByTitle(),
+              book4,
+              new Leaf<Book>(new BooksByTitle()),
+              new Leaf<Book>(new BooksByTitle()))));
+
+  // Books by Author
+  // Book2 -> Book3 -> Book4 -> Book5 -> Book6 -> Book1
+  Node<Book> binaryBookTree3 = new Node<Book>(
+      new BooksByTitle(),
+      book4,
+      new Node<Book>(
+          new BooksByTitle(),
+          book3,
+          new Node<Book>(
+              new BooksByTitle(),
+              book2,
+              new Leaf<Book>(new BooksByTitle()),
+              new Leaf<Book>(new BooksByTitle())),
+          new Leaf<Book>(new BooksByTitle())),
+      new Node<Book>(
+          new BooksByTitle(),
+          book5,
+          new Leaf<Book>(new BooksByTitle()),
+          new Node<Book>(
+              new BooksByTitle(),
+              book6,
+              new Leaf<Book>(new BooksByTitle()),
+              new Node<Book>(
+                  new BooksByTitle(),
+                  book1,
+                  new Leaf<Book>(new BooksByTitle()),
+                  new Leaf<Book>(new BooksByTitle())))));
+
+  boolean testInsert(Tester t) {
+    return t.checkExpect(binaryBookTree2.insert(book6), binaryBookTree2_1);
+  }
+
+}

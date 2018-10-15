@@ -1,0 +1,42 @@
+import javalib.funworld.WorldScene;
+import javalib.worldimages.Posn;
+
+// a non-empty list of fish
+public class ConsLoFish implements ILoFish {
+  IFish first;
+  ILoFish rest;
+
+  ConsLoFish(IFish first, ILoFish rest) {
+    this.first = first;
+    this.rest = rest;
+  }
+
+  public ILoFish generateRandomBGFish(Posn bottomRight) {
+    int randomSize = (int) (Math.random() * 3);
+    int randomTime = (int) (Math.random() * 100);
+
+    if (randomTime % 10 == 0) {
+      boolean rightSide = (randomTime % 2 == 0);
+      int randomY = (int) (Math.random() * bottomRight.y);
+      if (rightSide) {
+        return new ConsLoFish(
+            new BackgroundFish(new Posn(bottomRight.x, randomY), new Velocity(-1, 0), randomSize),
+            this);
+      } else {
+        return new ConsLoFish(
+            new BackgroundFish(new Posn(0, randomY), new Velocity(1, 0), randomSize),
+            this);
+      }
+    } else {
+      return this;
+    }
+  }
+
+  public WorldScene drawLoFish(WorldScene currentScene) {
+    return this.rest.drawLoFish(this.first.drawFish(currentScene));
+  }
+
+  public ILoFish mapUpdatePosnOnTick() {
+    return new ConsLoFish(first.updatePosnOnTick(), rest.mapUpdatePosnOnTick());
+  }
+}

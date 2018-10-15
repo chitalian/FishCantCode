@@ -1,0 +1,17 @@
+import javalib.worldimages.Posn;
+
+// a non-empty list of fish
+public class ConsLoFish implements ILoFish {
+  IFish first;
+  ILoFish rest;
+  ConsLoFish(AFish first, ILoFish rest){
+    this.first = first;
+    this.rest = rest;
+  }
+  
+  public ConsLoFish generateRandomBGFish() {
+    return new ConsLoFish(
+        new BackgroundFish(new Posn(1, 2), new Velocity(1, 0), 3),
+        this);
+  }
+}
